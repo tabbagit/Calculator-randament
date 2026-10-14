@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#15161c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Calculator randament</title>
+<style>
+  :root {
+    --bg: #15161c;
+    --card: #1e2029;
+    --line: #2d303c;
+    --text: #eceef4;
+    --muted: #8b90a0;
+    --accent: #5ee0a0;
+    --accent-dim: rgba(94, 224, 160, .12);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body {
+    min-height: 100vh;
+    padding: calc(env(safe-area-inset-top, 0px) + 24px) 18px calc(env(safe-area-inset-bottom, 0px) + 24px);
+    display: flex; justify-content: center;
+  }
+  main { width: 100%; max-width: 440px; }
+  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -.3px; }
+  .sub { color: var(--muted); font-size: 14px; margin: 0 0 22px; }
+
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 14px; }
+  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+
+  .field { display: flex; align-items: center; background: var(--bg); border: 1px solid var(--line);
+    border-radius: 12px; padding: 0 14px; transition: border-color .15s; }
+  .field:focus-within { border-color: var(--accent); }
+  .field input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: var(--text);
+    font-size: 24px; font-weight: 600; padding: 14px 0; font-family: inherit; }
+  .field .unit { color: var(--muted); font-size: 16px; margin-left: 8px; }
+  .card + .card { margin-top: 0; }
+
+  .result { background: var(--accent-dim); border-color: rgba(94,224,160,.35); text-align: center; padding: 22px 16px; }
+  .result .lbl { color: var(--muted); font-size: 13px; margin-bottom: 6px; }
+  .result .big { font-size: 38px; font-weight: 700; color: var(--accent); letter-spacing: -.5px; word-break: break-word; }
+  .result .hint { color: var(--muted); font-size: 13px; margin-top: 8px; }
+
+  .row { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
+  .row:last-child { border-bottom: 0; padding-bottom: 0; }
+  .row:first-child { padding-top: 0; }
+  .row span:first-child { color: var(--muted); }
+  .row b { font-weight: 600; }
+
+  .note { color: var(--muted); font-size: 12.5px; line-height: 1.5; margin: 4px 2px 0; }
+  .foot { text-align: center; color: var(--muted); font-size: 12px; margin-top: 26px; opacity: .7; }
+  .err { color: #ff8a8a; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Calculator randament</h1>
+  <p class="sub">suma + dobândă anuală → randament lunar</p>
+
+  <div class="card">
+    <label for="suma">Suma</label>
+    <div class="field">
+      <input id="suma" type="text" inputmode="decimal" autocomplete="off" value="100000" placeholder="0">
+    </div>
+  </div>
+
+  <div class="card">
+    <label for="dobanda">Dobândă anuală</label>
+    <div class="field">
+      <input id="dobanda" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder="0">
+      <span class="unit">%</span>
+    </div>
+  </div>
+
+  <div class="card result">
+    <div class="lbl">Randament lunar</div>
+    <div class="big" id="lunar">—</div>
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div class="card">
+    <div class="row"><span>Randament anual</span><b id="anual">—</b></div>
+    <div class="row"><span>Pe zi (÷365)</span><b id="zi">—</b></div>
+    <div class="row"><span>Lunar, cu dobândă compusă</span><b id="compus">—</b></div>
+  </div>
+
+  <p class="note">
+    Randamentul lunar principal este dobânda anuală împărțită la 12 (dobândă simplă).
+    Linia „dobândă compusă” arată cât ar fi pe lună dacă dobânda se capitalizează lunar și vrei să ajungi
+    exact la același randament anual.
+  </p>
+
+  <div class="foot">realizat de Diac Rihard Clement Ciprian</div>
+</main>
+
+<script>
+  const $ = id => document.getElementById(id);
+  const fmt = new Intl.NumberFormat('ro-RO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  function parse(v) {
+    // acceptă "100000", "100 000", "100.000,50", "10,5", "10.5"
+    v = String(v).trim().replace(/\s/g, '');
+    if (!v) return NaN;
+    const hasComma = v.includes(','), hasDot = v.includes('.');
+    if (hasComma && hasDot) {
+      // ultimul separator este cel zecimal
+      if (v.lastIndexOf(',') > v.lastIndexOf('.')) v = v.replace(/\./g, '').replace(',', '.');
+      else v = v.replace(/,/g, '');
+    } else if (hasComma) {
+      v = v.replace(',', '.');
+    }
+    return Number(v);
+  }
+
+  function calc() {
+    const suma = parse($('suma').value);
+    const rata = parse($('dobanda').value);
+
+    if (!isFinite(suma) || !isFinite(rata) || suma < 0 || rata < 0) {
+      ['lunar', 'anual', 'zi', 'compus'].forEach(i => $(i).textContent = '—');
+      $('hint').textContent = '';
+      return;
+    }
+
+    const anual = suma * rata / 100;
+    const lunar = anual / 12;
+    const zi = anual / 365;
+    const compus = suma * (Math.pow(1 + rata / 100, 1 / 12) - 1);
+
+    $('lunar').textContent = fmt.format(lunar);
+    $('hint').textContent = fmt.format(suma) + ' la ' + String(rata).replace('.', ',') + '% pe an';
+    $('anual').textContent = fmt.format(anual);
+    $('zi').textContent = fmt.format(zi);
+    $('compus').textContent = fmt.format(compus);
+  }
+
+  $('suma').addEventListener('input', calc);
+  $('dobanda').addEventListener('input', calc);
+  calc();
+</script>
+</body>
+</html>
