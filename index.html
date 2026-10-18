@@ -1,147 +1,112 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
-<meta name="theme-color" content="#15161c">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Calculator randament</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#101827">
+<title>Calculator de randament</title>
 <style>
-  :root {
-    --bg: #15161c;
-    --card: #1e2029;
-    --line: #2d303c;
-    --text: #eceef4;
-    --muted: #8b90a0;
-    --accent: #5ee0a0;
-    --accent-dim: rgba(94, 224, 160, .12);
-  }
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body { margin: 0; background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  body {
-    min-height: 100vh;
-    padding: calc(env(safe-area-inset-top, 0px) + 24px) 18px calc(env(safe-area-inset-bottom, 0px) + 24px);
-    display: flex; justify-content: center;
-  }
-  main { width: 100%; max-width: 440px; }
-  h1 { font-size: 26px; margin: 0 0 4px; letter-spacing: -.3px; }
-  .sub { color: var(--muted); font-size: 14px; margin: 0 0 22px; }
-
-  .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-bottom: 14px; }
-  label { display: block; font-size: 13px; color: var(--muted); margin-bottom: 8px; }
-
-  .field { display: flex; align-items: center; background: var(--bg); border: 1px solid var(--line);
-    border-radius: 12px; padding: 0 14px; transition: border-color .15s; }
-  .field:focus-within { border-color: var(--accent); }
-  .field input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; color: var(--text);
-    font-size: 24px; font-weight: 600; padding: 14px 0; font-family: inherit; }
-  .field .unit { color: var(--muted); font-size: 16px; margin-left: 8px; }
-  .card + .card { margin-top: 0; }
-
-  .result { background: var(--accent-dim); border-color: rgba(94,224,160,.35); text-align: center; padding: 22px 16px; }
-  .result .lbl { color: var(--muted); font-size: 13px; margin-bottom: 6px; }
-  .result .big { font-size: 38px; font-weight: 700; color: var(--accent); letter-spacing: -.5px; word-break: break-word; }
-  .result .hint { color: var(--muted); font-size: 13px; margin-top: 8px; }
-
-  .row { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 0; border-bottom: 1px solid var(--line); font-size: 15px; }
-  .row:last-child { border-bottom: 0; padding-bottom: 0; }
-  .row:first-child { padding-top: 0; }
-  .row span:first-child { color: var(--muted); }
-  .row b { font-weight: 600; }
-
-  .note { color: var(--muted); font-size: 12.5px; line-height: 1.5; margin: 4px 2px 0; }
-  .foot { text-align: center; color: var(--muted); font-size: 12px; margin-top: 26px; opacity: .7; }
-  .err { color: #ff8a8a; }
+:root{color-scheme:dark;--line:rgba(177,203,231,.15);--text:#f2f7ff;--dim:#a8b8cc;--muted:#71849d;--mint:#6ee7b7;--cyan:#67d7f5;--violet:#a78bfa;--red:#fda4af}
+*{box-sizing:border-box}html{min-height:100%;background:#0b1220}body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:radial-gradient(ellipse at 8% 0%,rgba(49,107,154,.25),transparent 36%),radial-gradient(ellipse at 95% 18%,rgba(119,80,190,.2),transparent 32%),linear-gradient(160deg,#0b1220,#101a2a 55%,#0b1422);padding:34px 18px 56px}
+.app-shell{width:min(100%,920px);margin:0 auto}.hero{position:relative;overflow:hidden;padding:30px;margin-bottom:20px;border:1px solid rgba(160,198,235,.18);border-radius:25px;background:linear-gradient(125deg,rgba(27,52,77,.96),rgba(25,33,57,.92) 58%,rgba(55,43,91,.85));box-shadow:0 24px 70px rgba(0,0,0,.22)}.hero:after{content:"";position:absolute;width:260px;height:260px;right:-65px;top:-110px;border:1px solid rgba(110,231,183,.22);border-radius:50%;box-shadow:0 0 0 28px rgba(110,231,183,.035),0 0 0 58px rgba(110,231,183,.025);pointer-events:none}.hero-mark{display:grid;place-items:center;width:48px;height:48px;border-radius:16px;background:linear-gradient(135deg,var(--mint),var(--cyan));color:#09202b;font-size:29px;font-weight:800;margin-bottom:19px}.eyebrow,.section-kicker{font-size:10px;font-weight:800;letter-spacing:.18em;color:var(--mint)}h1{font-size:clamp(29px,5vw,43px);line-height:1.08;letter-spacing:-.045em;margin:9px 0 12px;font-weight:780}.hero p{max-width:590px;margin:0;color:#c1d0e2;font-size:14px;line-height:1.7}.hero-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}.hero-tags span{font-size:11px;color:#d7e6f4;border:1px solid rgba(190,218,243,.17);background:rgba(8,17,30,.25);padding:7px 10px;border-radius:999px}
+#investitie{background:linear-gradient(145deg,rgba(20,32,50,.98),rgba(17,28,45,.98));border:1px solid var(--line);border-radius:23px;padding:clamp(19px,4vw,32px);box-shadow:0 24px 60px rgba(0,0,0,.2)}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:16px}.section-heading h2{font-size:22px;letter-spacing:-.03em;margin:6px 0 0}.section-icon{display:grid;place-items:center;width:43px;height:43px;border:1px solid rgba(110,231,183,.25);background:rgba(110,231,183,.08);color:var(--mint);border-radius:14px;font-size:25px}.section-desc{color:var(--dim);font-size:13px;line-height:1.6;margin:11px 0 23px}.inv-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:13px 20px;align-items:center;margin:0 0 22px}.inv-grid label{font-size:12px;font-weight:650;color:#c5d3e4;line-height:1.4}.inv-grid input,.inv-grid select{width:100%;min-width:0;min-height:47px;border:1px solid rgba(173,199,228,.2);border-radius:12px;padding:12px 13px;background:#0d1828;color:var(--text);font:inherit;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s}.inv-grid input:focus,.inv-grid select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(103,215,245,.12)}.inv-grid select{cursor:pointer}.inv-durata{display:grid;grid-template-columns:1fr .8fr;gap:9px;min-width:0}#invAplica{width:100%;border:0;border-radius:13px;min-height:51px;padding:14px 18px;font:inherit;font-size:14px;font-weight:800;letter-spacing:.02em;color:#08212b;background:linear-gradient(100deg,var(--mint),var(--cyan));cursor:pointer;box-shadow:0 10px 25px rgba(103,215,245,.13);transition:transform .18s,filter .18s}#invAplica:hover{filter:brightness(1.06);transform:translateY(-1px)}#invAplica:active{transform:translateY(0)}.inv-eroare{color:var(--red);font-size:12px;margin-top:10px;line-height:1.5}
+.inv-rezumat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}.inv-metric{position:relative;overflow:hidden;background:linear-gradient(145deg,#192a40,#142237);border:1px solid rgba(172,202,231,.13);border-radius:16px;padding:17px;min-width:0}.inv-metric:first-child{background:linear-gradient(135deg,rgba(39,100,91,.46),rgba(21,43,58,.95));border-color:rgba(110,231,183,.26)}.inv-metric:nth-child(2){background:linear-gradient(135deg,rgba(70,58,122,.44),rgba(22,36,57,.95));border-color:rgba(167,139,250,.22)}.inv-metric .k{font-size:11px;line-height:1.5;color:#aebfd3;margin-bottom:9px}.inv-metric .v{font-size:clamp(17px,3vw,23px);font-weight:800;letter-spacing:-.025em;line-height:1.25;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.inv-metric:first-child .v{color:var(--mint)}.inv-metric:nth-child(2) .v{color:#c4b5fd}.inv-detalii{color:#b8c8dc;font-size:12px;line-height:1.9;margin-top:17px;padding:14px 16px;border-radius:13px;background:rgba(7,16,28,.35);border:1px solid var(--line)}.inv-detalii strong{color:#f1f7ff}.inv-tabel-wrap{overflow-x:auto;margin-top:22px;border:1px solid var(--line);border-radius:14px}#investitie table{width:100%;border-collapse:collapse;font-size:12px;letter-spacing:0;font-variant-numeric:tabular-nums}#investitie th,#investitie td{padding:13px 15px;text-align:right;border-bottom:1px solid rgba(177,203,231,.1);white-space:nowrap}#investitie th:first-child,#investitie td:first-child{text-align:left}#investitie th{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#9fb3ca;background:rgba(6,14,25,.35)}#investitie tbody tr:last-child td{border-bottom:0}#investitie tbody tr:hover{background:rgba(103,215,245,.035)}.inv-nota{color:var(--muted);font-size:11px;line-height:1.65;margin-top:15px;padding-left:2px}.inv-nota:before{content:"ⓘ  ";color:var(--cyan)}
+@media(max-width:600px){body{padding:16px 12px 34px}.hero{padding:23px 21px;border-radius:20px}.hero-mark{width:43px;height:43px;margin-bottom:15px}.hero-tags{gap:6px}.hero-tags span{font-size:10px}#investitie{padding:20px 16px;border-radius:19px}.inv-grid{grid-template-columns:1fr;gap:7px;margin-bottom:18px}.inv-grid label:not(:first-child){margin-top:8px}.inv-rezumat{gap:9px}.inv-metric{padding:13px}.inv-metric .k{font-size:10px}.inv-metric .v{font-size:17px}#investitie th,#investitie td{padding:11px 10px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
-<main>
-  <h1>Calculator randament</h1>
-  <p class="sub">suma + dobândă anuală → randament lunar</p>
-
-  <div class="card">
-    <label for="suma">Suma</label>
-    <div class="field">
-      <input id="suma" type="text" inputmode="decimal" autocomplete="off" value="100000" placeholder="0">
+  <main class="app-shell">
+  <section class="hero">
+    <div class="hero-mark" aria-hidden="true">↗</div>
+    <div class="eyebrow">PLANIFICARE FINANCIARĂ</div>
+    <h1>Calculator de randament</h1>
+    <p>Simulează evoluția investiției tale și vezi cum se poate transforma capitalul în timp.</p>
+    <div class="hero-tags"><span>Dobândă compusă</span><span>Proiecție lunară</span><span>Funcționează offline</span></div>
+  </section>
+  <div class="card" id="investitie">
+    <div class="section-heading"><div><div class="section-kicker">CONFIGURARE</div><h2>Detaliile investiției</h2></div><span class="section-icon" aria-hidden="true">⌁</span></div>
+    <p class="section-desc">Completează suma, randamentul și perioada pentru a calcula o simulare.</p>
+    <div class="inv-grid">
+      <label for="invCapital">Suma investit&#259;</label>
+      <input id="invCapital" type="number" min="0.01" step="any" inputmode="decimal" placeholder="Ex. 50000">
+      <label for="invMoneda">Moned&#259;</label>
+      <select id="invMoneda"><option value="RON">RON</option><option value="EUR">EUR</option><option value="USD">USD</option></select>
+      <label for="invRandament">Randament introdus (%)</label>
+      <input id="invRandament" type="number" min="0" step="any" inputmode="decimal" value="8">
+      <label for="invFrecventa">Randamentul este</label>
+      <select id="invFrecventa"><option value="anual">Anual</option><option value="lunar">Lunar</option></select>
+      <label for="invTip">Mod de calcul</label>
+      <select id="invTip"><option value="compus">Cu acumulare (dob&#226;nd&#259; compus&#259;)</option><option value="simplu">F&#259;r&#259; acumulare (dob&#226;nd&#259; simpl&#259;)</option></select>
+      <label for="invDurata">Durata</label>
+      <div class="inv-durata"><input id="invDurata" type="number" min="1" step="1" inputmode="numeric" value="10"><select id="invUnitate"><option value="ani">Ani</option><option value="luni">Luni</option></select></div>
     </div>
+    <button class="lat" id="invAplica" type="button">Aplic&#259;</button>
+    <div class="nota" id="invEroare" role="status"></div>
+    <div id="invRezultat" aria-live="polite"></div>
   </div>
 
-  <div class="card">
-    <label for="dobanda">Dobândă anuală</label>
-    <div class="field">
-      <input id="dobanda" type="text" inputmode="decimal" autocomplete="off" value="10" placeholder="0">
-      <span class="unit">%</span>
-    </div>
-  </div>
-
-  <div class="card result">
-    <div class="lbl">Randament lunar</div>
-    <div class="big" id="lunar">—</div>
-    <div class="hint" id="hint"></div>
-  </div>
-
-  <div class="card">
-    <div class="row"><span>Randament anual</span><b id="anual">—</b></div>
-    <div class="row"><span>Pe zi (÷365)</span><b id="zi">—</b></div>
-    <div class="row"><span>Lunar, cu dobândă compusă</span><b id="compus">—</b></div>
-  </div>
-
-  <p class="note">
-    Randamentul lunar principal este dobânda anuală împărțită la 12 (dobândă simplă).
-    Linia „dobândă compusă” arată cât ar fi pe lună dacă dobânda se capitalizează lunar și vrei să ajungi
-    exact la același randament anual.
-  </p>
-
-  <div class="foot">realizat de Diac Rihard Clement Ciprian</div>
-</main>
-
+  </main>
 <script>
-  const $ = id => document.getElementById(id);
-  const fmt = new Intl.NumberFormat('ro-RO', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-  function parse(v) {
-    // acceptă "100000", "100 000", "100.000,50", "10,5", "10.5"
-    v = String(v).trim().replace(/\s/g, '');
-    if (!v) return NaN;
-    const hasComma = v.includes(','), hasDot = v.includes('.');
-    if (hasComma && hasDot) {
-      // ultimul separator este cel zecimal
-      if (v.lastIndexOf(',') > v.lastIndexOf('.')) v = v.replace(/\./g, '').replace(',', '.');
-      else v = v.replace(/,/g, '');
-    } else if (hasComma) {
-      v = v.replace(',', '.');
-    }
-    return Number(v);
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var ids = ["invCapital", "invMoneda", "invRandament", "invFrecventa", "invTip", "invDurata", "invUnitate"];
+  function fmt(n, moneda) {
+    return new Intl.NumberFormat("ro-RO", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n) + " " + moneda;
   }
-
-  function calc() {
-    const suma = parse($('suma').value);
-    const rata = parse($('dobanda').value);
-
-    if (!isFinite(suma) || !isFinite(rata) || suma < 0 || rata < 0) {
-      ['lunar', 'anual', 'zi', 'compus'].forEach(i => $(i).textContent = '—');
-      $('hint').textContent = '';
-      return;
-    }
-
-    const anual = suma * rata / 100;
-    const lunar = anual / 12;
-    const zi = anual / 365;
-    const compus = suma * (Math.pow(1 + rata / 100, 1 / 12) - 1);
-
-    $('lunar').textContent = fmt.format(lunar);
-    $('hint').textContent = fmt.format(suma) + ' la ' + String(rata).replace('.', ',') + '% pe an';
-    $('anual').textContent = fmt.format(anual);
-    $('zi').textContent = fmt.format(zi);
-    $('compus').textContent = fmt.format(compus);
+  function pct(n) {
+    return new Intl.NumberFormat("ro-RO", { minimumFractionDigits: 2, maximumFractionDigits: 4 }).format(n * 100) + "%";
   }
+  function calculeaza() {
+    var capital = Number($("invCapital").value);
+    var rata = Number($("invRandament").value) / 100;
+    var durata = Number($("invDurata").value);
+    var unitate = $("invUnitate").value;
+    var frecventa = $("invFrecventa").value;
+    var tip = $("invTip").value;
+    var moneda = $("invMoneda").value;
+    var eroare = "";
+    if (!$("invCapital").value.trim() || !Number.isFinite(capital) || capital <= 0) eroare = "Introdu o sum&#259; investit&#259; mai mare dec&#226;t zero.";
+    else if (!$("invRandament").value.trim() || !Number.isFinite(rata) || rata < 0) eroare = "Introdu un randament valid, egal sau mai mare dec&#226;t zero.";
+    else if (!$("invDurata").value.trim() || !Number.isInteger(durata) || durata < 1) eroare = "Introdu o durat&#259; &#238;ntreag&#259; de cel pu&#539;in o lun&#259; sau un an.";
+    if (eroare) { $("invEroare").textContent = eroare; $("invRezultat").innerHTML = ""; return; }
+    $("invEroare").textContent = "";
+    var luni = unitate === "ani" ? durata * 12 : durata;
+    var rataLunara, rataAnuala, rataAnualaEfectiva, rataLunaraEfectiva;
+    if (frecventa === "anual") {
+      rataAnuala = rata;
+      rataLunara = tip === "compus" ? Math.pow(1 + rata, 1 / 12) - 1 : rata / 12;
+    } else {
+      rataLunara = rata;
+      rataAnuala = tip === "compus" ? Math.pow(1 + rata, 12) - 1 : rata * 12;
+    }
+    rataAnualaEfectiva = tip === "compus" ? Math.pow(1 + rataLunara, 12) - 1 : rataLunara * 12;
+    rataLunaraEfectiva = tip === "compus" ? Math.pow(1 + rataAnuala, 1 / 12) - 1 : rataAnuala / 12;
+    function sumaLa(l) { return tip === "compus" ? capital * Math.pow(1 + rataLunara, l) : capital * (1 + rataLunara * l); }
+    var final = sumaLa(luni), profit = final - capital;
+    var html = '<div class="inv-rezumat">' +
+      '<div class="inv-metric"><div class="k">Capital final estimat</div><div class="v">' + fmt(final, moneda) + '</div></div>' +
+      '<div class="inv-metric"><div class="k">Profit total</div><div class="v">' + fmt(profit, moneda) + '</div></div>' +
+      '<div class="inv-metric"><div class="k">Profit lunar mediu (primul an)</div><div class="v">' + fmt((sumaLa(12) - capital) / 12, moneda) + '</div></div>' +
+      '<div class="inv-metric"><div class="k">Randament anual efectiv</div><div class="v">' + pct(rataAnualaEfectiva) + '</div></div>' +
+      '<div class="inv-metric"><div class="k">Randament lunar echivalent</div><div class="v">' + pct(rataLunaraEfectiva) + '</div></div>' +
+      '</div><div class="inv-detalii">Capital ini&#539;ial: <strong>' + fmt(capital, moneda) + '</strong><br>Perioad&#259;: <strong>' + luni + ' luni</strong><br>Cre&#537;tere total&#259;: <strong>' + pct(profit / capital) + '</strong></div>';
+    var randuri = [];
+    var pas = luni <= 24 ? 1 : 12;
+    for (var l = pas; l <= luni; l += pas) {
+      randuri.push('<tr><td>' + (l % 12 === 0 ? (l / 12) + ' an' + (l / 12 === 1 ? '' : 'i') : l + ' luni') + '</td><td>' + fmt(sumaLa(l), moneda) + '</td><td>' + fmt(sumaLa(l) - capital, moneda) + '</td></tr>');
+    }
+    if (luni % pas !== 0) randuri.push('<tr><td>' + luni + ' luni (final)</td><td>' + fmt(final, moneda) + '</td><td>' + fmt(profit, moneda) + '</td></tr>');
+    html += '<div class="inv-tabel-wrap"><table><thead><tr><th>Perioad&#259;</th><th>Capital estimat</th><th>Profit cumulat</th></tr></thead><tbody>' + randuri.join("") + '</tbody></table></div>';
+    html += '<div class="inv-nota">Simulare matematic&#259;, nu o promisiune de randament. Nu sunt incluse taxe, comisioane, infla&#539;ie sau depuneri suplimentare. La „f&#259;r&#259; acumulare”, profitul se calculeaz&#259; liniar, f&#259;r&#259; reinvestirea c&#226;&#537;tigurilor.</div>';
+    $("invRezultat").innerHTML = html;
+  }
+  $("invAplica").addEventListener("click", calculeaza);
+  ids.forEach(function (id) { $(id).addEventListener("keydown", function (e) { if (e.key === "Enter") calculeaza(); }); });
+})();
 
-  $('suma').addEventListener('input', calc);
-  $('dobanda').addEventListener('input', calc);
-  calc();
 </script>
 </body>
 </html>
