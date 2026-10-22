@@ -13,6 +13,7 @@
 .inv-rezumat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}.inv-metric{position:relative;overflow:hidden;background:linear-gradient(145deg,#192a40,#142237);border:1px solid rgba(172,202,231,.13);border-radius:16px;padding:17px;min-width:0}.inv-metric:first-child{background:linear-gradient(135deg,rgba(39,100,91,.46),rgba(21,43,58,.95));border-color:rgba(110,231,183,.26)}.inv-metric:nth-child(2){background:linear-gradient(135deg,rgba(70,58,122,.44),rgba(22,36,57,.95));border-color:rgba(167,139,250,.22)}.inv-metric .k{font-size:11px;line-height:1.5;color:#aebfd3;margin-bottom:9px}.inv-metric .v{font-size:clamp(17px,3vw,23px);font-weight:800;letter-spacing:-.025em;line-height:1.25;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.inv-metric:first-child .v{color:var(--mint)}.inv-metric:nth-child(2) .v{color:#c4b5fd}.inv-detalii{color:#b8c8dc;font-size:12px;line-height:1.9;margin-top:17px;padding:14px 16px;border-radius:13px;background:rgba(7,16,28,.35);border:1px solid var(--line)}.inv-detalii strong{color:#f1f7ff}.inv-tabel-wrap{overflow-x:auto;margin-top:22px;border:1px solid var(--line);border-radius:14px}#investitie table{width:100%;border-collapse:collapse;font-size:12px;letter-spacing:0;font-variant-numeric:tabular-nums}#investitie th,#investitie td{padding:13px 15px;text-align:right;border-bottom:1px solid rgba(177,203,231,.1);white-space:nowrap}#investitie th:first-child,#investitie td:first-child{text-align:left}#investitie th{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#9fb3ca;background:rgba(6,14,25,.35)}#investitie tbody tr:last-child td{border-bottom:0}#investitie tbody tr:hover{background:rgba(103,215,245,.035)}.inv-nota{color:var(--muted);font-size:11px;line-height:1.65;margin-top:15px;padding-left:2px}.inv-nota:before{content:"ⓘ  ";color:var(--cyan)}
 @media(max-width:600px){body{padding:16px 12px 34px}.hero{padding:23px 21px;border-radius:20px}.hero-mark{width:43px;height:43px;margin-bottom:15px}.hero-tags{gap:6px}.hero-tags span{font-size:10px}#investitie{padding:20px 16px;border-radius:19px}.inv-grid{grid-template-columns:1fr;gap:7px;margin-bottom:18px}.inv-grid label:not(:first-child){margin-top:8px}.inv-rezumat{gap:9px}.inv-metric{padding:13px}.inv-metric .k{font-size:10px}.inv-metric .v{font-size:17px}#investitie th,#investitie td{padding:11px 10px}}
 .inv-grid .ascuns{display:none!important}
+.inv-grafic{margin-top:22px;padding:16px;border:1px solid var(--line);border-radius:16px;background:rgba(7,16,28,.35)}.gf-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.gf-title{font-size:13px;font-weight:700;color:#f1f7ff}.gf-seg{display:inline-flex;border:1px solid rgba(173,199,228,.2);border-radius:10px;overflow:hidden}.gf-seg button{border:0;background:transparent;color:var(--dim);font:inherit;font-size:12px;font-weight:650;padding:7px 13px;cursor:pointer;transition:background .15s,color .15s}.gf-seg button+button{border-left:1px solid rgba(173,199,228,.2)}.gf-seg button[aria-pressed=true]{background:rgba(103,215,245,.16);color:var(--text)}.gf-seg button:disabled{opacity:.35;cursor:not-allowed}.gf-legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin:12px 0 8px;font-size:11px;color:var(--dim)}.gf-legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:6px;vertical-align:middle}.gf-box{position:relative;touch-action:pan-y;-webkit-user-select:none;user-select:none}.gf-box svg{display:block;max-width:100%}.gf-tip{position:absolute;pointer-events:none;z-index:2;padding:10px 12px;border-radius:10px;background:#0b1626;border:1px solid rgba(173,199,228,.25);font-size:11px;line-height:1.7;color:#c5d3e4;white-space:nowrap;box-shadow:0 10px 30px rgba(0,0,0,.45)}.gf-tip strong{color:#f1f7ff}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -136,6 +137,135 @@
     $("invRezultat").innerHTML = html;
   }
 
+  // ===== Grafic =====
+  var grafic = null;
+  var CULORI = { depus: "#9fb3ca", capital: "#6ee7b7", profit: "#c4b5fd" };
+  function fmtCompact(n) {
+    return new Intl.NumberFormat("ro-RO", { notation: "compact", maximumFractionDigits: 1 }).format(n);
+  }
+  function pasGran(g) { return g === "luni" ? 1 : (g === "ani" ? 12 : 120); }
+  function granImplicita(luni) { return luni <= 24 ? "luni" : (luni <= 480 ? "ani" : "decenii"); }
+  function etichetaLuna(m) {
+    if (m === 0) return "Început";
+    var a = Math.floor(m / 12), r = m % 12, p = [];
+    if (a) p.push(a + (a === 1 ? " an" : " ani"));
+    if (r) p.push(r + (r === 1 ? " lună" : " luni"));
+    return p.join(" și ");
+  }
+  function etichetaAxa(m) {
+    if (m === 0) return "0";
+    if (m < 12 || m % 12 !== 0) return m + " l.";
+    return (m / 12) + (m === 12 ? " an" : " ani");
+  }
+  function pasFrumos(x) {
+    var e = Math.pow(10, Math.floor(Math.log10(x))), f = x / e;
+    return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * e;
+  }
+
+  function initGrafic(serie, moneda, luni) {
+    grafic = { serie: serie, moneda: moneda, luni: luni, gran: granImplicita(luni) };
+    var w = $("invGraficWrap");
+    if (!w) return;
+    var butoane = [["luni", "Luni"], ["ani", "Ani"], ["decenii", "Decenii"]].map(function (b) {
+      var off = (b[0] === "ani" && luni < 24) || (b[0] === "decenii" && luni < 240);
+      return '<button type="button" data-g="' + b[0] + '"' + (off ? ' disabled' : '') + '>' + b[1] + '</button>';
+    }).join("");
+    w.innerHTML =
+      '<div class="gf-head"><div class="gf-title">Evoluția în timp</div><div class="gf-seg" role="group" aria-label="Afișează pe">' + butoane + '</div></div>' +
+      '<div class="gf-legend"><span><i style="background:' + CULORI.capital + '"></i>Capital estimat</span><span><i style="background:' + CULORI.depus + '"></i>Total depus</span><span><i style="background:' + CULORI.profit + '"></i>Profit cumulat</span></div>' +
+      '<div class="gf-box" id="gfBox"></div>';
+    Array.prototype.forEach.call(w.querySelectorAll(".gf-seg button"), function (b) {
+      b.addEventListener("click", function () { grafic.gran = b.getAttribute("data-g"); deseneaza(); });
+    });
+    deseneaza();
+  }
+
+  function deseneaza() {
+    var box = $("gfBox");
+    if (!grafic || !box) return;
+    var luni = grafic.luni, moneda = grafic.moneda, s = pasGran(grafic.gran);
+    Array.prototype.forEach.call(document.querySelectorAll(".gf-seg button"), function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-g") === grafic.gran ? "true" : "false");
+    });
+    var W = Math.max(280, box.clientWidth), H = W < 520 ? 250 : 320;
+    var L = 54, R = 14, T = 12, B = 30, pw = W - L - R, ph = H - T - B;
+    var pts = grafic.serie.filter(function (p) { return p[0] % s === 0 || p[0] === luni; });
+
+    var maxY = pts[pts.length - 1][2];
+    pts.forEach(function (p) { if (p[2] > maxY) maxY = p[2]; });
+    var pasY = pasFrumos(maxY / 4), topY = Math.ceil(maxY / pasY) * pasY;
+    var X = function (m) { return L + (m / luni) * pw; };
+    var Y = function (v) { return T + ph - (v / topY) * ph; };
+
+    var g = "";
+    for (var v = 0; v <= topY + pasY / 2; v += pasY) {
+      g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + Y(v).toFixed(1) + '" y2="' + Y(v).toFixed(1) + '" stroke="rgba(177,203,231,.12)"/>' +
+        '<text x="' + (L - 8) + '" y="' + (Y(v) + 4).toFixed(1) + '" text-anchor="end" font-size="10.5" fill="#71849d">' + fmtCompact(v) + '</text>';
+    }
+    var cand = [1, 2, 3, 6, 12, 24, 36, 60, 120, 240, 360, 600, 1200], pasX = cand[cand.length - 1];
+    var maxEt = Math.max(2, Math.min(6, Math.floor(pw / 70)));
+    for (var i = 0; i < cand.length; i++) { if (luni / cand[i] <= maxEt) { pasX = cand[i]; break; } }
+    for (var m = 0; m <= luni; m += pasX) {
+      var xa = X(m);
+      var anc = m === 0 ? "start" : (xa > W - R - 20 ? "end" : "middle");
+      g += '<text x="' + xa.toFixed(1) + '" y="' + (H - 9) + '" text-anchor="' + anc + '" font-size="10.5" fill="#71849d">' + etichetaAxa(m) + '</text>';
+    }
+    var cale = function (idx) {
+      return pts.map(function (p, k) { return (k ? "L" : "M") + X(p[0]).toFixed(1) + "," + Y(p[idx]).toFixed(1); }).join("");
+    };
+    var baza = (T + ph).toFixed(1);
+    var arie = cale(2) + "L" + X(pts[pts.length - 1][0]).toFixed(1) + "," + baza + "L" + X(pts[0][0]).toFixed(1) + "," + baza + "Z";
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="' + W + '" height="' + H + '" role="img" aria-label="Grafic cu evoluția capitalului, a sumei depuse și a profitului">' +
+      '<defs><linearGradient id="gfArie" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + CULORI.capital + '" stop-opacity=".25"/><stop offset="1" stop-color="' + CULORI.capital + '" stop-opacity="0"/></linearGradient></defs>' +
+      g +
+      '<path d="' + arie + '" fill="url(#gfArie)"/>' +
+      '<path d="' + cale(1) + '" fill="none" stroke="' + CULORI.depus + '" stroke-width="2" stroke-dasharray="5 4" stroke-linejoin="round"/>' +
+      '<path d="' + cale(3) + '" fill="none" stroke="' + CULORI.profit + '" stroke-width="2" stroke-linejoin="round"/>' +
+      '<path d="' + cale(2) + '" fill="none" stroke="' + CULORI.capital + '" stroke-width="2.5" stroke-linejoin="round"/>' +
+      '<line id="gfGhid" y1="' + T + '" y2="' + (T + ph) + '" stroke="rgba(242,247,255,.35)" stroke-dasharray="3 3" style="display:none"/>' +
+      '<circle id="gfD1" r="4" fill="' + CULORI.depus + '" stroke="#0b1220" stroke-width="2" style="display:none"/>' +
+      '<circle id="gfD3" r="4" fill="' + CULORI.profit + '" stroke="#0b1220" stroke-width="2" style="display:none"/>' +
+      '<circle id="gfD2" r="4.5" fill="' + CULORI.capital + '" stroke="#0b1220" stroke-width="2" style="display:none"/>' +
+      '<rect id="gfZona" x="' + L + '" y="' + T + '" width="' + pw + '" height="' + ph + '" fill="transparent"/>' +
+      '</svg><div class="gf-tip" id="gfTip" hidden></div>';
+    box.innerHTML = svg;
+
+    var zona = $("gfZona"), tip = $("gfTip"), ghid = $("gfGhid"), svgEl = box.querySelector("svg");
+    function arata(e) {
+      var r = svgEl.getBoundingClientRect();
+      var px = (e.clientX - r.left) * (W / r.width);
+      var mm = Math.min(luni, Math.max(0, (px - L) / pw * luni)), best = pts[0];
+      pts.forEach(function (p) { if (Math.abs(p[0] - mm) < Math.abs(best[0] - mm)) best = p; });
+      var x = X(best[0]);
+      ghid.setAttribute("x1", x); ghid.setAttribute("x2", x); ghid.style.display = "";
+      [[1, "gfD1"], [3, "gfD3"], [2, "gfD2"]].forEach(function (d) {
+        var c = $(d[1]); c.setAttribute("cx", x); c.setAttribute("cy", Y(best[d[0]])); c.style.display = "";
+      });
+      tip.innerHTML = '<strong>' + etichetaLuna(best[0]) + '</strong><br>' +
+        '<span style="color:' + CULORI.capital + '">●</span> Capital estimat: <strong>' + fmt(best[2], moneda) + '</strong><br>' +
+        '<span style="color:' + CULORI.depus + '">●</span> Total depus: <strong>' + fmt(best[1], moneda) + '</strong><br>' +
+        '<span style="color:' + CULORI.profit + '">●</span> Profit cumulat: <strong>' + fmt(best[3], moneda) + '</strong>';
+      tip.hidden = false;
+      var tw = tip.offsetWidth, sx = x * (r.width / W);
+      var left = sx + 14 + tw > r.width ? sx - 14 - tw : sx + 14;
+      tip.style.left = Math.max(0, left) + "px";
+      tip.style.top = "8px";
+    }
+    function ascunde() {
+      tip.hidden = true; ghid.style.display = "none";
+      ["gfD1", "gfD2", "gfD3"].forEach(function (id) { $(id).style.display = "none"; });
+    }
+    zona.addEventListener("pointermove", arata);
+    zona.addEventListener("pointerdown", arata);
+    zona.addEventListener("pointerleave", ascunde);
+  }
+
+  var resizeCadru = 0;
+  window.addEventListener("resize", function () {
+    cancelAnimationFrame(resizeCadru);
+    resizeCadru = requestAnimationFrame(function () { if (grafic && $("gfBox")) deseneaza(); });
+  });
+
   function seteazaMod() {
     var mod = $("invMod").value;
     Array.prototype.forEach.call(document.querySelectorAll("[data-m]"), function (el) {
@@ -234,6 +364,7 @@
     // O singură trecere prin toate lunile; se salvează rândurile pentru tabel pe parcurs.
     // Contribuțiile se adaugă la sfârșitul lunii scadente; cele anuale la fiecare 12 luni.
     var pas = luni <= 24 ? 1 : 12;
+    var serie = [[0, capital, capital, 0]];
     var sold = capital, principal = capital, profitSimplu = 0, totalContributii = 0;
     var profitPrimulAn = 0, profitUltimaLuna = 0, profitLaInceputUltimulAn = 0, randuri = [];
     for (var luna = 1; luna <= luni; luna++) {
@@ -248,6 +379,7 @@
       }
       var finalLuna = compus ? sold : principal + profitSimplu;
       var profitLuna = compus ? sold - principal : profitSimplu;
+      serie.push([luna, principal, finalLuna, profitLuna]);
       if (luna === Math.min(12, luni)) profitPrimulAn = profitLuna;
       if (luni > 12 && luna === luni - 12) profitLaInceputUltimulAn = profitLuna;
       if (luna % pas === 0 || luna === luni) {
@@ -274,9 +406,11 @@
       '<div class="inv-metric"><div class="k">' + etichetaAnual + '</div><div class="v">' + pct(rataAnuala) + '</div><div class="k">' + etichetaUltimulAn + ': <strong>' + fmt(profitUltimulAn, moneda) + '</strong></div></div>' +
       '<div class="inv-metric"><div class="k">Randament lunar echivalent</div><div class="v">' + pct(rataLunara) + '</div><div class="k">Profit în prima lună: <strong>' + fmt(capital * rataLunara, moneda) + '</strong><br>Profit în ultima lună: <strong>' + fmt(profitUltimaLuna, moneda) + '</strong><br>Profit lunar mediu (toată perioada): <strong>' + fmt(profit / luni, moneda) + '</strong></div></div>' +
       '</div><div class="inv-detalii">Capital inițial: <strong>' + fmt(capital, moneda) + '</strong><br>Contribuție: <strong>' + fmt(contributie, moneda) + ' / ' + (frecventaContributie === "lunar" ? 'lună' : 'an') + '</strong><br>Total capital depus: <strong>' + fmt(principal, moneda) + '</strong><br>Perioadă: <strong>' + luni + ' luni</strong><br>Creștere față de capitalul depus: <strong>' + pct(principal > 0 ? profit / principal : 0) + '</strong></div>';
+    html += '<div class="inv-grafic" id="invGraficWrap"></div>';
     html += '<div class="inv-tabel-wrap"><table><thead><tr><th>Perioadă</th><th>Total depus</th><th>Capital estimat</th><th>Profit cumulat</th></tr></thead><tbody>' + randuri.join("") + '</tbody></table></div>';
     html += '<div class="inv-nota">Simulare matematică, nu o promisiune de randament. Nu sunt incluse taxe, comisioane sau inflație. Contribuțiile sunt considerate depuse la sfârșitul lunii sau al anului scadent. Cu acumulare, câștigurile sunt reinvestite; fără acumulare, randamentul se calculează simplu asupra sumelor depuse, proporțional cu timpul investit.</div>';
     $("invRezultat").innerHTML = html;
+    initGrafic(serie, moneda, luni);
   }
 
   $("invMod").addEventListener("change", seteazaMod);
