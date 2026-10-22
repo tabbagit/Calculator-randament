@@ -12,6 +12,7 @@
 #investitie{background:linear-gradient(145deg,rgba(20,32,50,.98),rgba(17,28,45,.98));border:1px solid var(--line);border-radius:23px;padding:clamp(19px,4vw,32px);box-shadow:0 24px 60px rgba(0,0,0,.2)}.section-heading{display:flex;justify-content:space-between;align-items:center;gap:16px}.section-heading h2{font-size:22px;letter-spacing:-.03em;margin:6px 0 0}.section-icon{display:grid;place-items:center;width:43px;height:43px;border:1px solid rgba(110,231,183,.25);background:rgba(110,231,183,.08);color:var(--mint);border-radius:14px;font-size:25px}.section-desc{color:var(--dim);font-size:13px;line-height:1.6;margin:11px 0 23px}.inv-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:13px 20px;align-items:center;margin:0 0 22px}.inv-grid label{font-size:12px;font-weight:650;color:#c5d3e4;line-height:1.4}.inv-grid input,.inv-grid select{width:100%;min-width:0;min-height:47px;border:1px solid rgba(173,199,228,.2);border-radius:12px;padding:12px 13px;background:#0d1828;color:var(--text);font:inherit;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s}.inv-grid input:focus,.inv-grid select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(103,215,245,.12)}.inv-grid select{cursor:pointer}.inv-durata{display:grid;grid-template-columns:1fr .8fr;gap:9px;min-width:0}#invAplica{width:100%;border:0;border-radius:13px;min-height:51px;padding:14px 18px;font:inherit;font-size:14px;font-weight:800;letter-spacing:.02em;color:#08212b;background:linear-gradient(100deg,var(--mint),var(--cyan));cursor:pointer;box-shadow:0 10px 25px rgba(103,215,245,.13);transition:transform .18s,filter .18s}#invAplica:hover{filter:brightness(1.06);transform:translateY(-1px)}#invAplica:active{transform:translateY(0)}.inv-eroare{color:var(--red);font-size:12px;margin-top:10px;line-height:1.5}
 .inv-rezumat{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:22px}.inv-metric{position:relative;overflow:hidden;background:linear-gradient(145deg,#192a40,#142237);border:1px solid rgba(172,202,231,.13);border-radius:16px;padding:17px;min-width:0}.inv-metric:first-child{background:linear-gradient(135deg,rgba(39,100,91,.46),rgba(21,43,58,.95));border-color:rgba(110,231,183,.26)}.inv-metric:nth-child(2){background:linear-gradient(135deg,rgba(70,58,122,.44),rgba(22,36,57,.95));border-color:rgba(167,139,250,.22)}.inv-metric .k{font-size:11px;line-height:1.5;color:#aebfd3;margin-bottom:9px}.inv-metric .v{font-size:clamp(17px,3vw,23px);font-weight:800;letter-spacing:-.025em;line-height:1.25;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}.inv-metric:first-child .v{color:var(--mint)}.inv-metric:nth-child(2) .v{color:#c4b5fd}.inv-detalii{color:#b8c8dc;font-size:12px;line-height:1.9;margin-top:17px;padding:14px 16px;border-radius:13px;background:rgba(7,16,28,.35);border:1px solid var(--line)}.inv-detalii strong{color:#f1f7ff}.inv-tabel-wrap{overflow-x:auto;margin-top:22px;border:1px solid var(--line);border-radius:14px}#investitie table{width:100%;border-collapse:collapse;font-size:12px;letter-spacing:0;font-variant-numeric:tabular-nums}#investitie th,#investitie td{padding:13px 15px;text-align:right;border-bottom:1px solid rgba(177,203,231,.1);white-space:nowrap}#investitie th:first-child,#investitie td:first-child{text-align:left}#investitie th{font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#9fb3ca;background:rgba(6,14,25,.35)}#investitie tbody tr:last-child td{border-bottom:0}#investitie tbody tr:hover{background:rgba(103,215,245,.035)}.inv-nota{color:var(--muted);font-size:11px;line-height:1.65;margin-top:15px;padding-left:2px}.inv-nota:before{content:"ⓘ  ";color:var(--cyan)}
 @media(max-width:600px){body{padding:16px 12px 34px}.hero{padding:23px 21px;border-radius:20px}.hero-mark{width:43px;height:43px;margin-bottom:15px}.hero-tags{gap:6px}.hero-tags span{font-size:10px}#investitie{padding:20px 16px;border-radius:19px}.inv-grid{grid-template-columns:1fr;gap:7px;margin-bottom:18px}.inv-grid label:not(:first-child){margin-top:8px}.inv-rezumat{gap:9px}.inv-metric{padding:13px}.inv-metric .k{font-size:10px}.inv-metric .v{font-size:17px}#investitie th,#investitie td{padding:11px 10px}}
+.inv-grid .ascuns{display:none!important}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
@@ -22,28 +23,34 @@
     <div class="eyebrow">PLANIFICARE FINANCIARĂ</div>
     <h1>Calculator de randament</h1>
     <p>Simulează evoluția investiției tale și vezi cum se poate transforma capitalul în timp.</p>
-    <div class="hero-tags"><span>Dobândă compusă</span><span>Proiecție lunară</span><span>Funcționează offline</span></div>
+    <div class="hero-tags"><span>Dobândă compusă</span><span>Proiecție lunară</span><span>Suma necesară pentru un venit dorit</span><span>Funcționează offline</span></div>
   </section>
   <div id="investitie">
     <div class="section-heading"><div><div class="section-kicker">CONFIGURARE</div><h2>Detaliile investiției</h2></div><span class="section-icon" aria-hidden="true">⌁</span></div>
-    <p class="section-desc">Completează suma, randamentul și perioada pentru a calcula o simulare.</p>
+    <p class="section-desc">Alege ce vrei să calculezi, completează datele și apasă „Aplică”.</p>
     <div class="inv-grid">
-      <label for="invCapital">Suma investită</label>
-      <input id="invCapital" type="number" min="0.01" max="1000000000000" step="any" inputmode="decimal" placeholder="Ex. 50000">
+      <label for="invMod">Ce vrei să calculezi</label>
+      <select id="invMod"><option value="randament">Randamentul unei investiții</option><option value="suma">Suma necesară pentru un venit dorit</option><option value="dobanda">Dobânda necesară pentru un venit dorit</option></select>
+      <label for="invVenit" data-m="suma dobanda">Venitul dorit</label>
+      <input id="invVenit" data-m="suma dobanda" type="number" min="0.01" max="1000000000000" step="any" inputmode="decimal" placeholder="Ex. 1000">
+      <label for="invVenitFrecventa" data-m="suma dobanda">Venitul dorit este</label>
+      <select id="invVenitFrecventa" data-m="suma dobanda"><option value="lunar">Lunar</option><option value="anual">Anual</option></select>
+      <label for="invCapital" data-m="randament dobanda">Suma investită</label>
+      <input id="invCapital" data-m="randament dobanda" type="number" min="0.01" max="1000000000000" step="any" inputmode="decimal" placeholder="Ex. 50000">
       <label for="invMoneda">Monedă</label>
       <select id="invMoneda"><option value="RON">RON</option><option value="EUR">EUR</option><option value="USD">USD</option></select>
-      <label for="invRandament">Randament introdus (%)</label>
-      <input id="invRandament" type="number" min="0" step="any" inputmode="decimal" value="8">
-      <label for="invFrecventa">Randamentul este</label>
-      <select id="invFrecventa"><option value="anual">Anual</option><option value="lunar">Lunar</option></select>
-      <label for="invTip">Mod de calcul</label>
-      <select id="invTip"><option value="compus">Cu acumulare (dobândă compusă)</option><option value="simplu">Fără acumulare (dobândă simplă)</option></select>
-      <label for="invContributie">Contribuție suplimentară</label>
-      <input id="invContributie" type="number" min="0" max="1000000000000" step="any" inputmode="decimal" value="0" placeholder="0 = fără contribuții">
-      <label for="invFrecventaContributie">Frecvența contribuției</label>
-      <select id="invFrecventaContributie"><option value="lunar">Lunar</option><option value="anual">Anual</option></select>
-      <label for="invDurata">Durata</label>
-      <div class="inv-durata"><input id="invDurata" type="number" min="1" max="1200" step="1" inputmode="numeric" value="10"><select id="invUnitate"><option value="ani">Ani</option><option value="luni">Luni</option></select></div>
+      <label for="invRandament" data-m="randament suma">Randament introdus (%)</label>
+      <input id="invRandament" data-m="randament suma" type="number" min="0" step="any" inputmode="decimal" value="8">
+      <label for="invFrecventa" data-m="randament suma">Randamentul este</label>
+      <select id="invFrecventa" data-m="randament suma"><option value="anual">Anual</option><option value="lunar">Lunar</option></select>
+      <label for="invTip" data-m="randament">Mod de calcul</label>
+      <select id="invTip" data-m="randament"><option value="compus">Cu acumulare (dobândă compusă)</option><option value="simplu">Fără acumulare (dobândă simplă)</option></select>
+      <label for="invContributie" data-m="randament">Contribuție suplimentară</label>
+      <input id="invContributie" data-m="randament" type="number" min="0" max="1000000000000" step="any" inputmode="decimal" value="0" placeholder="0 = fără contribuții">
+      <label for="invFrecventaContributie" data-m="randament">Frecvența contribuției</label>
+      <select id="invFrecventaContributie" data-m="randament"><option value="lunar">Lunar</option><option value="anual">Anual</option></select>
+      <label for="invDurata" data-m="randament">Durata</label>
+      <div class="inv-durata" data-m="randament"><input id="invDurata" type="number" min="1" max="1200" step="1" inputmode="numeric" value="10"><select id="invUnitate"><option value="ani">Ani</option><option value="luni">Luni</option></select></div>
     </div>
     <button id="invAplica" type="button">Aplică</button>
     <div class="inv-eroare" id="invEroare" role="alert"></div>
@@ -55,7 +62,7 @@
 (function () {
   "use strict";
   var $ = function (id) { return document.getElementById(id); };
-  var ids = ["invCapital", "invMoneda", "invRandament", "invFrecventa", "invTip", "invContributie", "invFrecventaContributie", "invDurata", "invUnitate"];
+  var ids = ["invMod", "invVenit", "invVenitFrecventa", "invCapital", "invMoneda", "invRandament", "invFrecventa", "invTip", "invContributie", "invFrecventaContributie", "invDurata", "invUnitate"];
   var MAX_SUMA = 1e12, MAX_ANI = 100, MAX_LUNI = 1200;
 
   function fmt(n, moneda) {
@@ -69,7 +76,118 @@
     $("invRezultat").innerHTML = "";
   }
 
+  function calculeazaSuma() {
+    var venit = Number($("invVenit").value);
+    var venitFrecventa = $("invVenitFrecventa").value;
+    var rata = Number($("invRandament").value) / 100;
+    var frecventa = $("invFrecventa").value;
+    var moneda = $("invMoneda").value;
+    var maxRata = frecventa === "anual" ? 10 : 0.5;
+
+    if (!$("invVenit").value.trim() || !Number.isFinite(venit) || venit <= 0)
+      return arataEroare("Introdu un venit dorit mai mare decât zero.");
+    if (venit > MAX_SUMA)
+      return arataEroare("Venitul dorit poate fi cel mult 1.000.000.000.000.");
+    if (!$("invRandament").value.trim() || !Number.isFinite(rata) || rata <= 0)
+      return arataEroare("Introdu un randament mai mare decât zero.");
+    if (rata > maxRata)
+      return arataEroare("Randamentul poate fi cel mult " + (frecventa === "anual" ? "1000% pe an." : "50% pe lună."));
+    $("invEroare").textContent = "";
+
+    var venitLunar = venitFrecventa === "lunar" ? venit : venit / 12;
+    var venitAnual = venitFrecventa === "anual" ? venit : venit * 12;
+    // Rate proporționale: 10% pe an = 0,8333% pe lună; 1% pe lună = 12% pe an
+    var rataAnuala = frecventa === "anual" ? rata : rata * 12;
+    var rataLunara = frecventa === "anual" ? rata / 12 : rata;
+    var capital = venitAnual / rataAnuala;
+
+    // Varianta alternativă: randamentul se compune, iar venitul se retrage la frecvența aleasă
+    var rataEfectiva, capitalAlt;
+    if (venitFrecventa === "lunar") {
+      rataEfectiva = frecventa === "anual" ? Math.pow(1 + rata, 1 / 12) - 1 : rata;
+      capitalAlt = venit / rataEfectiva;
+    } else {
+      rataEfectiva = frecventa === "anual" ? rata : Math.pow(1 + rata, 12) - 1;
+      capitalAlt = venit / rataEfectiva;
+    }
+    var diferit = Math.abs(capitalAlt - capital) > 0.005;
+
+    if (!Number.isFinite(capital) || !Number.isFinite(capitalAlt))
+      return arataEroare("Valorile introduse produc un rezultat prea mare pentru a fi afișat.");
+
+    var notaAlt = "";
+    if (diferit) {
+      notaAlt = '<br>Dacă randamentul se compune (' +
+        (frecventa === "anual"
+          ? pct(rata) + ' pe an este randament efectiv, deci echivalent cu ' + pct(rataEfectiva) + ' pe lună'
+          : pct(rata) + ' pe lună se compune, deci echivalent cu ' + pct(rataEfectiva) + ' pe an') +
+        '), suma necesară este <strong>' + fmt(capitalAlt, moneda) + '</strong>.';
+    }
+
+    var html = '<div class="inv-rezumat">' +
+      '<div class="inv-metric"><div class="k">Suma necesară</div><div class="v">' + fmt(capital, moneda) + '</div></div>' +
+      '<div class="inv-metric"><div class="k">Venit anual obținut</div><div class="v">' + fmt(venitAnual, moneda) + '</div></div>' +
+      '<div class="inv-metric"><div class="k">Venit lunar obținut</div><div class="v">' + fmt(venitLunar, moneda) + '</div></div>' +
+      '<div class="inv-metric"><div class="k">Randament folosit</div><div class="v">' + pct(rataAnuala) + ' / an</div><div class="k">Echivalent proporțional: <strong>' + pct(rataLunara) + ' / lună</strong></div></div>' +
+      '</div><div class="inv-detalii">Venit dorit: <strong>' + fmt(venit, moneda) + ' / ' + (venitFrecventa === "lunar" ? 'lună' : 'an') + '</strong><br>' +
+      'Randament: <strong>' + pct(rata) + ' / ' + (frecventa === "anual" ? 'an' : 'lună') + '</strong><br>' +
+      'Suma necesară = venit anual ÷ randament anual = <strong>' + fmt(venitAnual, moneda) + ' ÷ ' + pct(rataAnuala) + '</strong>' + notaAlt + '</div>' +
+      '<div class="inv-nota">Se presupune că retragi doar profitul, iar capitalul rămâne intact. Calcul matematic, nu o promisiune de randament; nu sunt incluse taxe, comisioane sau inflație.</div>';
+    $("invRezultat").innerHTML = html;
+  }
+
+  function seteazaMod() {
+    var mod = $("invMod").value;
+    Array.prototype.forEach.call(document.querySelectorAll("[data-m]"), function (el) {
+      el.classList.toggle("ascuns", el.getAttribute("data-m").split(" ").indexOf(mod) < 0);
+    });
+    $("invEroare").textContent = "";
+    $("invRezultat").innerHTML = "";
+  }
+
+  function calculeazaDobanda() {
+    var capital = Number($("invCapital").value);
+    var venit = Number($("invVenit").value);
+    var venitFrecventa = $("invVenitFrecventa").value;
+    var moneda = $("invMoneda").value;
+
+    if (!$("invCapital").value.trim() || !Number.isFinite(capital) || capital <= 0)
+      return arataEroare("Introdu o sumă investită mai mare decât zero.");
+    if (capital > MAX_SUMA)
+      return arataEroare("Suma investită poate fi cel mult 1.000.000.000.000.");
+    if (!$("invVenit").value.trim() || !Number.isFinite(venit) || venit <= 0)
+      return arataEroare("Introdu un venit dorit mai mare decât zero.");
+    if (venit > MAX_SUMA)
+      return arataEroare("Venitul dorit poate fi cel mult 1.000.000.000.000.");
+    $("invEroare").textContent = "";
+
+    var venitLunar = venitFrecventa === "lunar" ? venit : venit / 12;
+    var venitAnual = venitFrecventa === "anual" ? venit : venit * 12;
+    // Rate proporționale: dobânda lunară = venit lunar / capital; cea anuală = venit anual / capital
+    var rataAnuala = venitAnual / capital;
+    var rataLunara = venitLunar / capital;
+
+    // Varianta alternativă: dobânda se compune
+    var notaAlt;
+    if (venitFrecventa === "lunar") {
+      notaAlt = '<br>Dacă dobânda lunară de ' + pct(rataLunara) + ' se compune, randamentul anual efectiv este <strong>' + pct(Math.pow(1 + rataLunara, 12) - 1) + '</strong>.';
+    } else {
+      notaAlt = '<br>Dacă dobânda anuală de ' + pct(rataAnuala) + ' este efectivă (se compune lunar), echivalentul lunar este <strong>' + pct(Math.pow(1 + rataAnuala, 1 / 12) - 1) + '</strong>.';
+    }
+
+    var html = '<div class="inv-rezumat">' +
+      '<div class="inv-metric"><div class="k">Dobânda necesară</div><div class="v">' + pct(rataAnuala) + ' / an</div></div>' +
+      '<div class="inv-metric"><div class="k">Echivalent lunar</div><div class="v">' + pct(rataLunara) + ' / lună</div></div>' +
+      '<div class="inv-metric"><div class="k">Suma investită</div><div class="v">' + fmt(capital, moneda) + '</div></div>' +
+      '<div class="inv-metric"><div class="k">Venit obținut</div><div class="v">' + fmt(venitLunar, moneda) + ' / lună</div><div class="k">Pe an: <strong>' + fmt(venitAnual, moneda) + '</strong></div></div>' +
+      '</div><div class="inv-detalii">Dobânda necesară = venit anual ÷ suma investită = <strong>' + fmt(venitAnual, moneda) + ' ÷ ' + fmt(capital, moneda) + '</strong>' + notaAlt + '</div>' +
+      '<div class="inv-nota">Se presupune că retragi doar profitul, iar capitalul rămâne intact. Calcul matematic, nu o promisiune de randament; nu sunt incluse taxe, comisioane sau inflație.</div>';
+    $("invRezultat").innerHTML = html;
+  }
+
   function calculeaza() {
+    if ($("invMod").value === "suma") return calculeazaSuma();
+    if ($("invMod").value === "dobanda") return calculeazaDobanda();
     var capital = Number($("invCapital").value);
     var rata = Number($("invRandament").value) / 100;
     var durata = Number($("invDurata").value);
@@ -161,6 +279,8 @@
     $("invRezultat").innerHTML = html;
   }
 
+  $("invMod").addEventListener("change", seteazaMod);
+  seteazaMod();
   $("invAplica").addEventListener("click", calculeaza);
   ids.forEach(function (id) { $(id).addEventListener("keydown", function (e) { if (e.key === "Enter") calculeaza(); }); });
 })();
